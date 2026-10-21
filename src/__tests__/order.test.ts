@@ -54,12 +54,14 @@ describe("pedido", () => {
       name: "Ana",
       fulfillment: "delivery" as const,
       address: "Rua Exemplo, 10",
+      paymentMethod: "Pix",
     };
     const message = buildOrderMessage([example], customer);
     expect(message).toContain("2x Pastel clássico — R$ 44,00");
     expect(message).toContain("Carne · Grande · Queijo extra");
     expect(message).toContain("Observação: sem cebola");
     expect(message).toContain("Endereço: Rua Exemplo, 10");
+    expect(message).toContain("Forma de pagamento: Pix");
     expect(message).toContain("Taxa de entrega: a confirmar com a pastelaria");
     expect(message).toContain("Total dos itens: R$ 44,00");
     expect(
@@ -73,6 +75,20 @@ describe("pedido", () => {
     expect(
       checkoutError([example], { ...customer, address: "" }, "5511999999999"),
     ).toMatch(/endereço/);
+    expect(
+      checkoutError(
+        [example],
+        { ...customer, paymentMethod: "  " },
+        "5511999999999",
+      ),
+    ).toMatch(/forma de pagamento/);
+    expect(checkoutError([example], customer, "5511999999999")).toBeNull();
+    expect(
+      buildOrderMessage(
+        [example],
+        { ...customer, fulfillment: "pickup", address: "" },
+      ),
+    ).not.toContain("Endereço:");
     expect(checkoutError([], customer, "5511999999999")).toMatch(/Adicione/);
   });
 });

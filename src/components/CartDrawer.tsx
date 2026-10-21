@@ -35,6 +35,7 @@ export function CartDrawer({ items, onClose, onQuantity, onRemove }: Props) {
     name: "",
     fulfillment: shopConfig.fulfillmentModes[0] ?? "pickup",
     address: "",
+    paymentMethod: "",
   });
   const [error, setError] = useState("");
   const [preview, setPreview] = useState(false);
@@ -212,6 +213,25 @@ export function CartDrawer({ items, onClose, onQuantity, onRemove }: Props) {
                     />
                   </>
                 )}
+                <label className="field-label" htmlFor="payment-method">
+                  Forma de pagamento <span>*</span>
+                </label>
+                <input
+                  id="payment-method"
+                  value={customer.paymentMethod}
+                  onChange={(event) =>
+                    setCustomer({
+                      ...customer,
+                      paymentMethod: event.target.value,
+                    })
+                  }
+                  placeholder="Como pretende pagar?"
+                  maxLength={60}
+                  autoComplete="off"
+                />
+                <p className="field-help">
+                  Informe apenas a forma desejada. Não digite dados do cartão.
+                </p>
                 <p className="field-help">
                   Modalidades e valores são demonstrativos. A disponibilidade
                   deve ser confirmada pela pastelaria.

@@ -28,6 +28,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
 
@@ -115,5 +116,60 @@ describe("fluxo do cardápio", () => {
         "Pastel de carne",
       ),
     ).toBeTruthy();
+  });
+
+  it("envia ao WhatsApp o pedido com nome, endereço e forma de pagamento", () => {
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    render(<App />);
+    const menu = document.querySelector("#cardapio") as HTMLElement;
+    fireEvent.click(
+      within(menu).getByRole("button", {
+        name: "Personalizar Pastel de carne",
+      }),
+    );
+    fireEvent.click(
+      screen
+        .getByRole("dialog", { name: "Pastel de carne" })
+        .querySelector(".add-button")!,
+    );
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Abrir carrinho com 1 itens/ })[0],
+    );
+    const drawer = screen.getByRole("dialog", { name: /Meu carrinho/ });
+    fireEvent.change(within(drawer).getByLabelText(/Seu nome/), {
+      target: { value: "Ana" },
+    });
+    fireEvent.change(within(drawer).getByLabelText(/Como prefere receber/), {
+      target: { value: "delivery" },
+    });
+    fireEvent.change(within(drawer).getByLabelText(/Endereço de entrega/), {
+      target: { value: "Rua Exemplo, 10" },
+    });
+    fireEvent.click(
+      within(drawer).getByRole("button", { name: /Finalizar pedido pelo WhatsApp/ }),
+    );
+    expect(open).not.toHaveBeenCalled();
+    expect(within(drawer).getByRole("alert").textContent).toMatch(/forma de pagamento/);
+
+    fireEvent.change(within(drawer).getByLabelText(/Forma de pagamento/), {
+      target: { value: "Pix" },
+    });
+    fireEvent.click(
+      within(drawer).getByRole("button", { name: /Pré-visualizar mensagem/ }),
+    );
+    expect(drawer.querySelector(".message-preview")?.textContent).toContain(
+      "Forma de pagamento: Pix",
+    );
+    fireEvent.click(
+      within(drawer).getByRole("button", { name: /Finalizar pedido pelo WhatsApp/ }),
+    );
+    expect(open).toHaveBeenCalledTimes(1);
+    const url = new URL(open.mock.calls[0][0]!);
+    expect(url.origin).toBe("https://wa.me");
+    expect(url.pathname).toBe("/5519987715865");
+    expect(url.searchParams.get("text")).toContain("Nome: Ana");
+    expect(url.searchParams.get("text")).toContain("Endereço: Rua Exemplo, 10");
+    expect(url.searchParams.get("text")).toContain("Forma de pagamento: Pix");
+    expect(open.mock.calls[0].slice(1)).toEqual(["_blank", "noopener,noreferrer"]);
   });
 });

@@ -14,6 +14,7 @@ export type Customer = {
   name: string;
   fulfillment: "pickup" | "delivery";
   address: string;
+  paymentMethod: string;
 };
 
 export const money = (cents: number) =>
@@ -136,6 +137,7 @@ export function buildOrderMessage(items: CartItem[], customer: Customer) {
   );
   if (customer.fulfillment === "delivery")
     lines.push(`Endereço: ${customer.address.trim()}`);
+  lines.push(`Forma de pagamento: ${customer.paymentMethod.trim()}`);
   lines.push("", "Gostaria de confirmar meu pedido.");
   return lines.join("\n");
 }
@@ -149,6 +151,8 @@ export function checkoutError(
   if (!customer.name.trim()) return "Informe seu nome para continuar.";
   if (customer.fulfillment === "delivery" && !customer.address.trim())
     return "Informe o endereço para entrega.";
+  if (!customer.paymentMethod.trim())
+    return "Informe a forma de pagamento.";
   if (!/^\d{12,15}$/.test(whatsappNumber))
     return "O WhatsApp da pastelaria ainda não foi configurado.";
   return null;

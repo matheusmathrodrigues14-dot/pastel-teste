@@ -22,7 +22,7 @@ npm run preview
 ## Dados reais antes da publicação comercial
 
 - Edite `src/data/catalog.ts` para cadastrar categorias, produtos, sabores, tamanhos, adicionais, preços em centavos e imagens correspondentes. Cada produto só oferece as opções ali cadastradas.
-- Edite `src/data/config.ts` para colocar o nome oficial, número de WhatsApp **com código do país e DDD, apenas dígitos**, endereço, horários, rede social e modalidades realmente oferecidas. O número está vazio nesta versão; o botão de finalização informa que falta configurá-lo e não abre um destino fictício.
+- O número de WhatsApp informado pelo proprietário já está em `src/data/config.ts`. Confirme endereço, horários, rede social e modalidades realmente oferecidas antes da publicação. O cliente informa nome, forma de pagamento e, para entrega, endereço; esses dados entram na mensagem de pedido.
 - Substitua os textos institucionais demonstrativos em `src/App.tsx` e confirme fotos e direitos de uso. As imagens atuais ficam em `public/images/` e foram geradas para este conceito.
 - Revise custos de entrega e disponibilidade. A versão demonstrativa exibe subtotal e total dos itens, sem adicionar taxa de entrega. A mensagem deixa a confirmação final para o estabelecimento.
 - Atualize título e descrição em `index.html` com a identidade definitiva.
