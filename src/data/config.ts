@@ -2,7 +2,7 @@
 export const shopConfig = {
   name: "Pastel da Praça",
   isDemo: true,
-  whatsappNumber: "", // Apenas dígitos, com código do país e DDD. Ex.: 55 + DDD + número.
+  whatsappNumber: "5519987715865", // Apenas dígitos, com código do país e DDD. Ex.: 55 + DDD + número.
   address: "",
   hours: "",
   instagramUrl: "",
