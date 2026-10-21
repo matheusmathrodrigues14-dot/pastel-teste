@@ -1,6 +1,6 @@
 /** Substitua somente após receber os dados oficiais da pastelaria. */
 export const shopConfig = {
-  name: "Ateliê do Pastel",
+  name: "Pastel da Praça",
   isDemo: true,
   whatsappNumber: "", // Apenas dígitos, com código do país e DDD. Ex.: 55 + DDD + número.
   address: "",

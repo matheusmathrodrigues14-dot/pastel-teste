@@ -1,6 +1,6 @@
-# Ateliê do Pastel — conceito demonstrativo
+# Pastel da Praça — conceito demonstrativo
 
-Site demonstrativo de pastelaria, desenvolvido com React, TypeScript, Tailwind CSS, Vite e GSAP. Inclui cardápio filtrável, personalização por produto, carrinho salvo no navegador e montagem de pedido para WhatsApp. **Nome, história, fotos, produtos, preços e modalidades de atendimento são exemplos**, não informações oficiais de uma pastelaria.
+Site demonstrativo de pastelaria, desenvolvido com React, TypeScript, Tailwind CSS, Vite e GSAP. Inclui cardápio filtrável, personalização por produto, carrinho salvo no navegador e montagem de pedido para WhatsApp. **História, fotos, produtos, preços e modalidades de atendimento são exemplos**, não informações oficiais da pastelaria.
 
 ## Desenvolvimento
 
