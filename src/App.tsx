@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import {
   ArrowDown,
   ArrowRight,
@@ -78,7 +78,7 @@ function SectionHeading({
   text,
 }: {
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   text?: string;
 }) {
   return (
@@ -341,7 +341,7 @@ export default function App() {
             <div className="menu-heading">
               <SectionHeading
                 eyebrow="Escolha seu momento"
-                title="Nosso cardápio <em>de exemplo.</em>"
+                title={<>Nosso cardápio <em>de exemplo.</em></>}
                 text="Explore sabores ilustrativos. O cardápio oficial, os preços e a disponibilidade serão definidos pela pastelaria."
               />
               <span className="menu-note">
