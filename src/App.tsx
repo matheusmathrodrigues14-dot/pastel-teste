@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowDown,
   ArrowRight,
@@ -14,8 +14,6 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   categories,
   products,
@@ -27,9 +25,8 @@ import { ProductImage } from "./components/ProductImage";
 import { ProductModal } from "./components/ProductModal";
 import { CartDrawer } from "./components/CartDrawer";
 import { useCart } from "./hooks/useCart";
+import { useCinematicScroll } from "./hooks/useCinematicScroll";
 import { money, subtotal } from "./lib/order";
-
-gsap.registerPlugin(ScrollTrigger);
 
 function ProductCard({
   product,
@@ -85,12 +82,14 @@ function SectionHeading({
   text?: string;
 }) {
   return (
-    <div className="section-heading reveal">
+    <div className="section-heading">
       <span className="eyebrow">
         <span className="eyebrow-line" />
         {eyebrow}
       </span>
-      <h2>{title}</h2>
+      <div className="title-mask">
+        <h2>{title}</h2>
+      </div>
       {text && <p>{text}</p>}
     </div>
   );
@@ -104,6 +103,7 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const cart = useCart();
+  useCinematicScroll(appRef);
   const [brandFirst, ...brandRest] = shopConfig.name.split(" ");
   const itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
   const filtered = products.filter(
@@ -113,78 +113,6 @@ export default function App() {
         .toLocaleLowerCase("pt-BR")
         .includes(query.toLocaleLowerCase("pt-BR").trim()),
   );
-
-  useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const ctx = gsap.context(() => {
-      gsap.from(".hero-copy > *", {
-        y: 30,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: "power3.out",
-      });
-      gsap.from(".hero-photo", {
-        scale: 1.08,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power2.out",
-      });
-      gsap.to(".hero-photo", {
-        yPercent: 12,
-        scale: 1.06,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-      gsap.to(".story-photo", {
-        yPercent: -10,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".story",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-      gsap.fromTo(
-        ".story-image",
-        { clipPath: "inset(8% 8% 8% 8% round 24px)" },
-        {
-          clipPath: "inset(0% 0% 0% 0% round 0px)",
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".story",
-            start: "top bottom",
-            end: "center center",
-            scrub: true,
-          },
-        },
-      );
-      gsap.from(".featured-grid .product-card", {
-        y: 55,
-        opacity: 0,
-        stagger: 0.11,
-        duration: 0.85,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".featured-grid", start: "top 82%", once: true },
-      });
-      gsap.utils.toArray<HTMLElement>(".reveal").forEach((element) => {
-        gsap.from(element, {
-          y: 34,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: { trigger: element, start: "top 88%", once: true },
-        });
-      });
-    }, appRef);
-    return () => ctx.revert();
-  }, []);
 
   function navTo(id: string) {
     setMobileMenu(false);
@@ -265,7 +193,23 @@ export default function App() {
                 <span className="eyebrow-line" /> Uma pausa mais crocante
               </span>
               <h1>
-                O sabor mora <em>nos detalhes.</em>
+                <span className="hero-word-mask">
+                  <span className="hero-word">O</span>
+                </span>{" "}
+                <span className="hero-word-mask">
+                  <span className="hero-word">sabor</span>
+                </span>{" "}
+                <span className="hero-word-mask">
+                  <span className="hero-word">mora</span>
+                </span>{" "}
+                <em>
+                  <span className="hero-word-mask">
+                    <span className="hero-word">nos</span>
+                  </span>{" "}
+                  <span className="hero-word-mask">
+                    <span className="hero-word">detalhes.</span>
+                  </span>
+                </em>
               </h1>
               <p>
                 Uma experiência feita para despertar a vontade de dar a primeira
@@ -300,6 +244,7 @@ export default function App() {
                 role="img"
                 aria-label="Imagem ilustrativa de um pastel artesanal crocante"
               />
+              <div className="hero-next-photo" aria-hidden="true" />
               <div className="hero-photo-shade" />
               <div className="hero-photo-caption">
                 <span className="caption-rule" /> Crocância que conta histórias
@@ -370,9 +315,11 @@ export default function App() {
             <span className="eyebrow">
               <span className="eyebrow-line" /> Sobre este conceito
             </span>
-            <h2>
-              Mais que um pastel. <em>Um convite.</em>
-            </h2>
+            <div className="story-title-mask">
+              <h2>
+                Mais que um pastel. <em>Um convite.</em>
+              </h2>
+            </div>
             <p>
               Imaginamos uma pastelaria onde escolher seu favorito é tão
               prazeroso quanto saboreá-lo. Cada detalhe deste site foi pensado
