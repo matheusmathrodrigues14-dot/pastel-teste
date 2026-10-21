@@ -21,11 +21,14 @@ export function useCinematicScroll(root: RefObject<HTMLDivElement | null>) {
         const scene = gsap.context(() => {
           if (conditions.conditions?.desktop) {
             const header = document.querySelector<HTMLElement>(".site-header");
+            const heroElement = document.querySelector<HTMLElement>(".hero");
+            const heroInner = document.querySelector<HTMLElement>(".hero-inner");
+            const heroVisual = document.querySelector<HTMLElement>(".hero-visual");
             const hero = gsap.timeline({
               scrollTrigger: {
                 trigger: ".hero",
                 start: () => `top top+=${header?.offsetHeight ?? 0}`,
-                end: () => `+=${Math.min(window.innerHeight * 0.85, 800)}`,
+                end: () => `+=${Math.min(window.innerHeight * 1.55, 1400)}`,
                 pin: true,
                 pinSpacing: true,
                 anticipatePin: 1,
@@ -37,11 +40,17 @@ export function useCinematicScroll(root: RefObject<HTMLDivElement | null>) {
               .to(
                 ".hero-visual",
                 {
-                  scale: 1.13,
-                  xPercent: -6,
-                  yPercent: -2,
-                  borderRadius: "90px 90px 0px 0px",
-                  duration: 1,
+                  scale: () => heroElement && heroVisual
+                    ? (heroElement.offsetWidth / heroVisual.offsetWidth) * 1.04
+                    : 2,
+                  x: () => heroElement && heroInner && heroVisual
+                    ? heroElement.offsetWidth / 2 - (heroInner.offsetLeft + heroVisual.offsetLeft + heroVisual.offsetWidth / 2)
+                    : 0,
+                  y: () => heroElement && heroInner && heroVisual
+                    ? heroElement.offsetHeight / 2 - (heroInner.offsetTop + heroVisual.offsetTop + heroVisual.offsetHeight / 2)
+                    : 0,
+                  borderRadius: "0px",
+                  duration: 1.8,
                   ease: "none",
                 },
                 0,
@@ -49,38 +58,48 @@ export function useCinematicScroll(root: RefObject<HTMLDivElement | null>) {
               .to(
                 ".hero-photo",
                 {
-                  scale: 1.3,
-                  xPercent: -5,
-                  yPercent: 3,
-                  duration: 1,
+                  scale: 1.45,
+                  xPercent: -7,
+                  yPercent: 4,
+                  duration: 1.8,
                   ease: "none",
                 },
                 0,
               )
               .to(
+                ".hero-immersive-shade",
+                { opacity: 1, duration: 0.75, ease: "none" },
+                0.15,
+              )
+              .to(
                 ".hero-badge",
-                { yPercent: -32, rotation: -6, duration: 1, ease: "none" },
+                { yPercent: -35, rotation: -7, scale: 0.53, duration: 1.8, ease: "none" },
                 0,
               )
               .to(
                 ".hero-photo-caption",
-                { yPercent: -24, duration: 1, ease: "none" },
+                { yPercent: -30, scale: 0.53, transformOrigin: "left bottom", duration: 1.8, ease: "none" },
                 0,
               )
               .to(
                 ".hero-word",
-                { yPercent: -14, stagger: 0.035, duration: 0.65, ease: "none" },
-                0.2,
+                { yPercent: -23, stagger: 0.07, duration: 0.9, ease: "none" },
+                0.25,
+              )
+              .to(
+                ".hero-copy > p",
+                { y: -24, duration: 1, ease: "none" },
+                0.3,
               )
               .fromTo(
                 ".hero-next-photo",
-                { autoAlpha: 0, scale: 1.14 },
-                { autoAlpha: 0.8, scale: 1, duration: 0.36, ease: "none" },
-                0.64,
+                { autoAlpha: 0, scale: 1.2, clipPath: "circle(0% at 72% 50%)" },
+                { autoAlpha: 1, scale: 1, clipPath: "circle(125% at 72% 50%)", duration: 1.2, ease: "none" },
+                1.45,
               )
               .to(
                 ".hero-bottom",
-                { autoAlpha: 0, y: -15, duration: 0.35, ease: "none" },
+                { autoAlpha: 0, y: -24, duration: 0.75, ease: "none" },
                 0.5,
               );
           } else {
@@ -96,7 +115,12 @@ export function useCinematicScroll(root: RefObject<HTMLDivElement | null>) {
               })
               .to(
                 ".hero-photo",
-                { scale: 1.2, yPercent: 7, duration: 1, ease: "none" },
+                { scale: 1.42, yPercent: 9, duration: 1, ease: "none" },
+                0,
+              )
+              .to(
+                ".hero-visual",
+                { scale: 1.09, borderRadius: "48px 48px 0px 0px", duration: 1, ease: "none" },
                 0,
               )
               .to(
@@ -111,9 +135,9 @@ export function useCinematicScroll(root: RefObject<HTMLDivElement | null>) {
               )
               .fromTo(
                 ".hero-next-photo",
-                { autoAlpha: 0, scale: 1.12 },
-                { autoAlpha: 0.3, scale: 1, duration: 0.4, ease: "none" },
-                0.6,
+                { autoAlpha: 0, scale: 1.18, clipPath: "circle(0% at 70% 55%)" },
+                { autoAlpha: 1, scale: 1, clipPath: "circle(125% at 70% 55%)", duration: 0.4, ease: "none" },
+                0.26,
               );
           }
 

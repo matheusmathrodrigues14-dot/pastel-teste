@@ -245,6 +245,7 @@ export default function App() {
                 aria-label="Imagem ilustrativa de um pastel artesanal crocante"
               />
               <div className="hero-next-photo" aria-hidden="true" />
+              <div className="hero-immersive-shade" aria-hidden="true" />
               <div className="hero-photo-shade" />
               <div className="hero-photo-caption">
                 <span className="caption-rule" /> Crocância que conta histórias
