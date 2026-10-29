@@ -61,3 +61,15 @@ body,.site-header,.hero,.pinned-story,.footer{background:#090909;color:#ffd0a8}
 @media(max-width:899px){.site-nav{background:#090909;border-bottom-color:#ff762d44}}
 @media(prefers-reduced-motion:reduce){.hero-bottom a svg{animation:none}}
 html.lenis{scroll-behavior:auto}
+
+/* Foto do hero: elevação sem alterar o grid. O frame interno mantém apenas o recorte da imagem. */
+.hero-visual{overflow:visible}
+.hero-photo-card{position:relative;display:block;align-self:stretch;width:100%;min-height:630px;border:1px solid #ff762d55;border-radius:2px;box-shadow:0 10px 24px #0009;transform:translateY(0) scale(1);transform-origin:center;transition:transform 260ms cubic-bezier(.22,1,.36,1);isolation:isolate}
+.hero-photo-card::after{content:"";position:absolute;inset:-2px;border:2px solid #ff9a56;border-radius:inherit;box-shadow:0 20px 46px #000c,0 0 0 1px #ff762d55;opacity:0;pointer-events:none;transition:opacity 260ms cubic-bezier(.22,1,.36,1);z-index:3}
+.hero-photo-card .hero-visual-frame{display:block;width:100%;height:100%;min-height:0}
+.hero-photo-card:focus-visible{outline:3px solid #ffbf88;outline-offset:5px}
+@media(hover:hover) and (pointer:fine){.hero-photo-card:hover,.hero-photo-card:focus-visible{transform:translateY(-6px) scale(1.015)}.hero-photo-card:hover::after,.hero-photo-card:focus-visible::after{opacity:1}}
+@media(hover:none),(pointer:coarse){.hero-photo-card:active{transform:scale(.995)}.hero-photo-card:focus-visible::after{opacity:1}}
+@media(max-width:899px){.hero-photo-card{min-height:500px}}
+@media(max-width:600px){.hero-photo-card{min-height:380px}}
+@media(prefers-reduced-motion:reduce){.hero-photo-card,.hero-photo-card::after{transition:none}.hero-photo-card:hover,.hero-photo-card:focus-visible,.hero-photo-card:active{transform:none}.hero-photo-card:focus-visible::after{opacity:1}}

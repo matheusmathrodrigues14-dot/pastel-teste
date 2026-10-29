@@ -27,6 +27,16 @@ it("clicar num aparelho atualiza a consulta do WhatsApp", () => {
   expect(decodeURIComponent(link.href)).toContain("Redmi Note 14 Pro");
 });
 
+it("a foto do hero é um link único para os modelos de iPhone", () => {
+  render(<App />);
+  fireEvent.click(screen.getByRole("button", { name: "Ver modelos Samsung" }));
+  const photo = screen.getByRole("link", { name: "Ver modelos de iPhone" });
+  expect(photo.getAttribute("href")).toBe("#modelos");
+  expect(photo.querySelector("a, button")).toBeNull();
+  fireEvent.click(photo);
+  expect(screen.getByRole("group", { name: "Modelos Apple" })).toBeTruthy();
+});
+
 it("busca modelos da marca ativa e mantém imagens locais em todas as marcas", () => {
   render(<App />);
   fireEvent.change(screen.getByRole("textbox", { name: "Buscar modelo" }), { target: { value: "iPhone 16 Pro" } });
