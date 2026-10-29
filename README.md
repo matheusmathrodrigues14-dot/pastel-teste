@@ -23,7 +23,7 @@ npm run build
 - A vitrine de marcas leva diretamente ao catálogo filtrado.
 - A lista de modelos atualiza o aparelho em destaque e prepara uma mensagem específica para o WhatsApp.
 - As imagens em `public/images/` são renders fotográficos ilustrativos das linhas Apple, Xiaomi, Samsung e Motorola. Não representam exatamente cada modelo, cor ou unidade à venda. Foram geradas para este projeto e convertidas para WebP.
-- Smooth scroll, botões magnéticos e narrativa com scroll pin usam GSAP. Em telas menores, a narrativa segue o fluxo normal. A preferência por movimento reduzido desliga as animações de entrada e o pin.
+- Scroll suave usa Lenis integrado ao GSAP; botões magnéticos, parallax e narrativa com scroll pin usam GSAP. A interface usa preto e laranja. Em telas menores, a narrativa segue o fluxo normal. A preferência por movimento reduzido desliga as animações de entrada e o pin.
 
 Antes de publicar como loja real, confirme nome da marca, modelos comercializados, fotos oficiais dos aparelhos, preços, estoque, condições de venda e número definitivo de WhatsApp.
 

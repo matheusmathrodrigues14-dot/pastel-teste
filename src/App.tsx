@@ -2,6 +2,8 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Asterisk, Check, ChevronRight, Menu, Search, X } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 import { brands, phones, type Brand, type Phone } from "./data/phones";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -37,9 +39,9 @@ function MagneticLink({ children, href, className = "", onClick }: { children: R
   function move(event: React.MouseEvent<HTMLAnchorElement>) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.matchMedia("(pointer: coarse)").matches) return;
     const rect = event.currentTarget.getBoundingClientRect();
-    gsap.to(ref.current, { x: (event.clientX - rect.left - rect.width / 2) * .14, y: (event.clientY - rect.top - rect.height / 2) * .18, duration: .35, ease: "power3.out" });
+    gsap.to(ref.current, { x: (event.clientX - rect.left - rect.width / 2) * .28, y: (event.clientY - rect.top - rect.height / 2) * .3, scale: 1.04, duration: .3, ease: "power3.out" });
   }
-  return <a ref={ref} href={href} className={`magnetic ${className}`} onClick={onClick} onMouseMove={move} onMouseLeave={() => gsap.to(ref.current, { x: 0, y: 0, duration: .55, ease: "elastic.out(1, .45)" })}>{children}</a>;
+  return <a ref={ref} href={href} className={`magnetic ${className}`} onClick={onClick} onMouseMove={move} onMouseLeave={() => gsap.to(ref.current, { x: 0, y: 0, scale: 1, duration: .55, ease: "elastic.out(1, .45)" })}>{children}</a>;
 }
 function BrandImage({ brand, className = "", eager = true }: { brand: Brand; className?: string; eager?: boolean }) {
   return <img className={className} src={brandImages[brand]} alt={`Imagem ilustrativa de celulares da linha ${brandNames[brand]}`} loading={eager ? "eager" : "lazy"} decoding="async" />;
@@ -47,6 +49,7 @@ function BrandImage({ brand, className = "", eager = true }: { brand: Brand; cla
 export default function App() {
   const page = useRef<HTMLDivElement>(null);
   const pinned = useRef<HTMLElement>(null);
+  const smoothScroll = useRef<Lenis | null>(null);
   const [brand, setBrand] = useState<Brand>("Apple");
   const [selected, setSelected] = useState<Phone>(phones.find(phone => phone.name === "iPhone 17 Pro") ?? phones[0]);
   const [query, setQuery] = useState("");
@@ -55,10 +58,17 @@ export default function App() {
   const visible = useMemo(() => phones.filter(phone => phone.brand === brand && `${phone.name} ${phone.family}`.toLocaleLowerCase("pt-BR").includes(query.toLocaleLowerCase("pt-BR"))), [brand, query]);
 
   useLayoutEffect(() => {
+    let updateSmoothScroll: ((time: number) => void) | null = null;
     const context = gsap.context(() => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      smoothScroll.current = new Lenis({ duration: 1.15, smoothWheel: true });
+      smoothScroll.current.on("scroll", ScrollTrigger.update);
+      updateSmoothScroll = time => smoothScroll.current?.raf(time * 1000);
+      gsap.ticker.add(updateSmoothScroll);
+      gsap.ticker.lagSmoothing(0);
       gsap.fromTo(".hero-in", { y: 38, opacity: 0 }, { y: 0, opacity: 1, duration: .9, stagger: .1, ease: "power3.out" });
       gsap.utils.toArray<HTMLElement>(".reveal").forEach(el => gsap.fromTo(el, { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: "power2.out", scrollTrigger: { trigger: el, start: "top 90%", once: true } }));
+      gsap.to(".hero-visual-frame img", { yPercent: 9, scale: 1.09, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
       if (window.innerWidth >= 900 && pinned.current) {
         const panels = gsap.utils.toArray<HTMLElement>(".pin-panel");
         gsap.set(panels.slice(1), { autoAlpha: 0, y: 50 });
@@ -67,14 +77,22 @@ export default function App() {
           .to(panels[1], { autoAlpha: 1, y: 0, duration: .55 }, "<+.12");
       }
     }, page);
-    return () => context.revert();
+    const followAnchor = (event: MouseEvent) => {
+      if (!smoothScroll.current || !(event.target instanceof Element)) return;
+      const link = event.target.closest<HTMLAnchorElement>('a[href^="#"]');
+      if (!link) return;
+      event.preventDefault();
+      smoothScroll.current.scrollTo(link.getAttribute("href")!, { duration: 1.15 });
+    };
+    document.addEventListener("click", followAnchor);
+    return () => { document.removeEventListener("click", followAnchor); if (updateSmoothScroll) gsap.ticker.remove(updateSmoothScroll); smoothScroll.current?.destroy(); smoothScroll.current = null; context.revert(); };
   }, []);
 
   function chooseBrand(next: Brand, jump = false) {
     setBrand(next);
     setSelected(phones.find(phone => phone.brand === next)!);
     setQuery("");
-    if (jump) window.setTimeout(() => document.getElementById("modelos")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }), 0);
+    if (jump) window.setTimeout(() => smoothScroll.current ? smoothScroll.current.scrollTo("#modelos", { duration: 1.15 }) : document.getElementById("modelos")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }), 0);
   }
   function selectModel(phone: Phone) {
     setSelected(phone);
