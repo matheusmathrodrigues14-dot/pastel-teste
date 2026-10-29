@@ -1,6 +1,6 @@
 # Órbita Mobile
 
-Landing page de demonstração para uma loja de celulares. A marca é provisória; modelos são apresentados para consulta, sem preços ou promessa de estoque. A conversa usa o WhatsApp de testes informado: (19) 98771-5865.
+Site demonstrativo de uma loja de celulares. A marca é provisória. O catálogo apresenta modelos para consulta, sem preços ou promessa de estoque. O WhatsApp de testes informado é (19) 98771-5865.
 
 ## Desenvolvimento
 
@@ -18,16 +18,15 @@ npm test
 npm run build
 ```
 
-## Estrutura atual
+## Experiência
 
-- `src/App.tsx`: seções, filtros, formulário de consulta e interações.
-- `src/data/phones.ts`: famílias e modelos exibidos no catálogo.
-- `src/style.css`: identidade visual e layout responsivo.
+- A vitrine de marcas leva diretamente ao catálogo filtrado.
+- A lista de modelos atualiza o aparelho em destaque e prepara uma mensagem específica para o WhatsApp.
+- As imagens em `public/images/` são renders fotográficos ilustrativos das linhas Apple, Xiaomi, Samsung e Motorola. Não representam exatamente cada modelo, cor ou unidade à venda. Foram geradas para este projeto e convertidas para WebP.
+- Smooth scroll, botões magnéticos e narrativa com scroll pin usam GSAP. Em telas menores, a narrativa segue o fluxo normal. A preferência por movimento reduzido desliga as animações de entrada e o pin.
 
-O site usa smooth scroll nas âncoras, botões magnéticos com GSAP e uma narrativa com scroll pin no desktop. Em telas menores, a narrativa segue o fluxo normal da página. A preferência por movimento reduzido desliga as animações de entrada e o pin.
-
-Antes de publicar como loja real, confirme marca, modelos comercializados, preços, estoque, condições de venda e número definitivo de WhatsApp. A disponibilidade de cada item depende de confirmação no atendimento.
+Antes de publicar como loja real, confirme nome da marca, modelos comercializados, fotos oficiais dos aparelhos, preços, estoque, condições de venda e número definitivo de WhatsApp.
 
 ## Publicação
 
-O arquivo `netlify.toml` executa `npm run build` e publica `dist`. A publicação ocorre automaticamente quando a branch `main` conectada à Netlify recebe um push.
+O `netlify.toml` executa `npm run build` e publica `dist`. A publicação ocorre automaticamente após um push para a branch `main` conectada à Netlify.
