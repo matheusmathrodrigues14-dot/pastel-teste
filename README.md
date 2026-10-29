@@ -29,4 +29,4 @@ Antes de publicar como loja real, confirme nome da marca, modelos comercializado
 
 ## Publicação
 
-O `netlify.toml` executa `npm run build` e publica `dist`. A publicação ocorre automaticamente após um push para a branch `main` conectada à Netlify.
+O `netlify.toml` executa `npm run build` e publica `dist`. Para publicar automaticamente, o projeto na Netlify precisa estar conectado a este repositório e à branch `main`; confira o estado da integração e dos builds no painel da Netlify.
